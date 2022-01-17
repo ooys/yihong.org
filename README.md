@@ -1,2 +1,2 @@
 # yihong.org
-My website.
+👋 Hi, I'm Hunter, and this is my personal website. Created with Next JS, deployed on Vercel.
