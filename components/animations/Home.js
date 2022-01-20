@@ -7,7 +7,7 @@ function HomeAnimation() {
                 "absolute w-[100%] z-10 animate-[disappear_3s_ease-in-out_forwards]"
             }>
             <div className="static bg-[#ffffff] h-screen text-center py-[30vh] ">
-                <div className="text-pink font-title text-[14vw] md:text-[10vw] lg:text-[8vw]">
+                <div className=" font-title text-[14vw] md:text-[10vw] lg:text-[8vw]">
                     <Typewriter
                         onInit={(typewriter) => {
                             typewriter

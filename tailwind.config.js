@@ -8,8 +8,8 @@ module.exports = {
         extend: {
             keyframes: {
                 wiggle: {
-                    "0%, 100%": { transform: "rotate(-3deg)" },
-                    "50%": { transform: "rotate(3deg)" },
+                    "0%, 100%": { transform: "rotate(-5deg)" },
+                    "50%": { transform: "rotate(5deg)" },
                 },
                 disappear: {
                     "50%": { opacity: 1 },
@@ -23,7 +23,11 @@ module.exports = {
                 },
             },
         },
-        colors: {},
+        colors: {
+            white: "#ffffff",
+            black: "#000000",
+            green: "#17B890",
+        },
         fontFamily: {
             title: ["Montserrat"],
             subtitle: ["Oxygen"],

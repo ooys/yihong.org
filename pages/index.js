@@ -63,23 +63,35 @@ export default function Home() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 href="https://github.com/michaelsong4399"
-                                className="mr-4 lg:mr-6">
-                                <span className="icon">
+                                className="mr-4 transition-all lg:mr-6 hover:text-green">
+                                <span className="icon ">
                                     <FontAwesomeIcon
-                                        className="fa-lg"
+                                        className="fa-lg hover:animate-[wiggle_0.3s_ease-in-out_infinite]"
                                         icon={fab.faGithub}></FontAwesomeIcon>
                                 </span>
                             </a>
                             <a
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                href="https://www.linkedin.com/in/yihongs/">
+                                href="https://www.linkedin.com/in/yihongs/"
+                                className="mr-4 transition-all lg:mr-6 hover:text-green">
                                 <span className="icon">
                                     <FontAwesomeIcon
-                                        className="fa-lg"
+                                        className="fa-lg hover:animate-[wiggle_0.3s_ease-in-out_infinite]"
                                         icon={fab.faLinkedin}></FontAwesomeIcon>
                                 </span>
                             </a>
+                            {/* <a
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                href="https://www.linkedin.com/in/yihongs/"
+                                className="mr-4 transition-all lg:mr-6 hover:text-green">
+                                <span className="icon">
+                                    <FontAwesomeIcon
+                                        className="fa-lg hover:animate-[wiggle_0.3s_ease-in-out_infinite]"
+                                        icon={fab.faLinkedin}></FontAwesomeIcon>
+                                </span>
+                            </a> */}
                         </div>
                     </div>
                     <div className=""></div>
