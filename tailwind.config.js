@@ -12,8 +12,9 @@ module.exports = {
                     "50%": { transform: "rotate(3deg)" },
                 },
                 disappear: {
-                    "66%": { opacity: 1 },
-                    "100%": { opacity: 0 },
+                    "50%": { opacity: 1 },
+                    "80%": { opacity: 0 },
+                    "100%": { "z-index": -1 },
                 },
                 appear: {
                     "0%": { opacity: 0 },

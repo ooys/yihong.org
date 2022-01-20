@@ -22,8 +22,8 @@ export default function Home() {
     return (
         <>
             <HomeAnimation />
-            <div className="absolute w-[100%] z-0">
-                <div className="static h-[100vh] pt-[20vh] lg:pt-[30vh] px-[15vw] grid grid-cols-1 lg:grid-cols-2 lg:gap-4">
+            <div className="absolute w-[100%] z-1">
+                <div className="static bg-[#ffffff]  h-[100vh] pt-[20vh] lg:pt-[30vh] px-[15vw] grid grid-cols-1 lg:grid-cols-2 lg:gap-4">
                     <div className="text-left">
                         <div className=" font-title text-[4vw] md:text-[2vw] lg:text-[1.5vw] ">
                             {
