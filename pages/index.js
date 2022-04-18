@@ -52,12 +52,12 @@ export default function Home() {
                             Developer, Composer, Entrepreneur
                         </div>
                         <div className="my-4 animate-[appear_7s_ease-in-out_forwards] font-title text-[4vw] md:text-[3vw] lg:text-[2vw]">
-                            <span>
+                            <span className="mr-4 lg:mr-6">
                                 <a
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     href="https://github.com/michaelsong4399"
-                                    className="mr-4 transition-colors lg:mr-6 hover:text-green">
+                                    className="transition-colors hover:text-green">
                                     <span className="icon ">
                                         <FontAwesomeIcon
                                             className="fa-lg hover:animate-[wiggle_0.3s_ease-in-out_infinite]"
@@ -67,7 +67,7 @@ export default function Home() {
                                     </span>
                                 </a>
                             </span>
-                            <span>
+                            <span className="mr-4 lg:mr-6">
                                 <a
                                     target="_blank"
                                     rel="noopener noreferrer"
