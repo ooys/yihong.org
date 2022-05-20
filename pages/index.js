@@ -58,7 +58,7 @@ export default function Home() {
                                     rel="noopener noreferrer"
                                     href="https://github.com/michaelsong4399"
                                     className="transition-colors hover:text-green">
-                                    <span className="icon ">
+                                    <span className="icon">
                                         <FontAwesomeIcon
                                             className="fa-lg hover:animate-[wiggle_0.3s_ease-in-out_infinite]"
                                             icon={
@@ -85,14 +85,14 @@ export default function Home() {
                         </div>
                     </div>
                     <div className="">
-                        <div className="animate-[appear_8s_ease-in-out_forwards]">
+                        {/* <div className="animate-[appear_8s_ease-in-out_forwards]">
                             <Image
                                 src="/images/profile.svg"
                                 layout="responsive"
                                 width="100%"
                                 height="100%"
                             />
-                        </div>
+                        </div> */}
                     </div>
                 </div>
                 {/* <div className="static bg-[#ffffff] h-[100vh] pt-[20vh] lg:pt-[30vh] px-[15vw] grid grid-cols-1 lg:grid-cols-2 lg:gap-4">
