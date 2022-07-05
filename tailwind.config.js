@@ -27,6 +27,8 @@ module.exports = {
             white: "#ffffff",
             black: "#000000",
             green: "#17B890",
+            blue: "#0056F5",
+            orange: "#EE6055",
         },
         fontFamily: {
             title: ["Montserrat"],
