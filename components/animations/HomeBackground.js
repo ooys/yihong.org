@@ -1,9 +1,23 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { fab } from "@fortawesome/free-brands-svg-icons";
+import { useState, useEffect } from "react";
+
 // import Image  from "next/image";
 import Typewriter from "typewriter-effect";
 
-function HomeBackground({ timer }) {
+function HomeBackground() {
+    const [timer, setTimer] = useState(0);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            if (timer <= 10) {
+                setTimer(timer + 1);
+            }
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [timer]);
+
     return (
         <div className="static bg-[#ffffff]  h-[100vh] pt-[20vh] lg:pt-[20vh] px-[15vw] grid grid-cols-1 lg:grid-cols-2 lg:gap-4">
             <div className="text-left lg:pt-[10vh]">

@@ -17,44 +17,22 @@ import {
     faBook,
 } from "@fortawesome/free-solid-svg-icons";
 import Sun from "/components/Sun.js";
+import HomeTransition from "../components/animations/HomeTransition";
 
 export default function Home() {
-    const [timer, setTimer] = useState(0);
-    const [pos, setPos] = useState(0);
     const ref = useRef();
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            if (timer <= 10) {
-                setTimer(timer + 1);
-            }
-        }, 1000);
-
-        return () => clearInterval(interval);
-    }, [timer]);
-
-    useEffect(() => {
-        function checkPos() {
-            const t = ref.current.container.current.scrollTop;
-            const frame = t / window.innerHeight;
-            console.log(frame);
-            setPos(frame);
-        }
-        ref.current.container.current.onscroll = checkPos;
-    });
 
     return (
         <>
-            <HomeAnimation />
             <Parallax
                 pages={4}
                 style={{ top: "0", left: "0", backgroundColor: "white" }}
                 ref={ref}>
                 <ParallaxLayer offset={0} speed={1}>
-                    <HomeBackground timer={timer} />
+                    <HomeAnimation />
+                    <HomeBackground />
                 </ParallaxLayer>
                 <ParallaxLayer offset={0.5} speed={0.1}>
-                    {/* Clouds */}
                     <img
                         src="/images/clouds.svg"
                         className="mt-[70vh] h-[100vh] overflow-hidden scale-[2.3]"></img>
@@ -110,12 +88,7 @@ export default function Home() {
                     </div>
                 </ParallaxLayer>
                 <ParallaxLayer offset={1} speed={1}>
-                    <div
-                        className={"w-[100vw] h-[500vh] mt-[100vh]"}
-                        style={{
-                            backgroundColor:
-                                "rgba(0, 0, 0, " + (pos - 1.5) * 3 + ")",
-                        }}></div>
+                    <HomeTransition props={ref} />
                 </ParallaxLayer>
                 <ParallaxLayer offset={1} speed={2}>
                     <div className=" h-[100vh] px-[10vw] pt-[15vh]">
