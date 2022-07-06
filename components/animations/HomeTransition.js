@@ -4,11 +4,9 @@ function HomeTransition({ props }) {
     const [pos, setPos] = useState(0);
 
     useEffect(() => {
-        console.log(props);
         function checkPos() {
             const t = props.current.container.current.scrollTop;
             const frame = t / window.innerHeight;
-            console.log(frame);
             setPos(frame);
         }
         props.current.container.current.onscroll = checkPos;
