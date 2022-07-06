@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { fab } from "@fortawesome/free-brands-svg-icons";
-import Image from "next/image";
+// import Image  from "next/image";
 import Typewriter from "typewriter-effect";
 
 function HomeBackground({ timer }) {

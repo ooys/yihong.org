@@ -20,8 +20,8 @@ function Sun() {
 
         // Camera Settings
         const camX = -1.2;
-        const camY = 0.5;
-        const camZ = 1.2;
+        const camY = 0;
+        const camZ = 2;
         camera.position.set(camX, camY, camZ);
 
         renderer.render(scene, camera);
