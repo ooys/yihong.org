@@ -28,14 +28,14 @@ export default function Home() {
                 pages={4}
                 style={{ top: "0", left: "0", backgroundColor: "white" }}
                 ref={ref}>
-                <ParallaxLayer offset={0} speed={1}>
-                    <HomeAnimation />
-                    <HomeBackground />
-                </ParallaxLayer>
-                <ParallaxLayer offset={0.5} speed={0.1}>
+                <ParallaxLayer offset={1} speed={0.1}>
                     <img
                         src="/images/clouds.svg"
                         className="mt-[70vh] h-[100vh] overflow-hidden scale-[2.3]"></img>
+                </ParallaxLayer>
+                <ParallaxLayer offset={0} speed={1}>
+                    <HomeAnimation />
+                    <HomeBackground />
                 </ParallaxLayer>
 
                 <ParallaxLayer offset={0.85} speed={0.25}>
@@ -152,7 +152,7 @@ export default function Home() {
                                 </div>
                             </div>
                         </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 mt-[50vh]">
+                        <div className="grid grid-cols-1 md:grid-cols-2 mt-[40vh]">
                             <div className=" bg-white shadow-xl	mt-[-2vh] md:mt-[15vh] px-[2rem] py-[2rem] w-[80vw] md:w-[40vw] rounded-2xl h-auto z-10">
                                 <div className="text-black font-title text-[5vw] md:text-[4vw] lg:text-[2vw] text-center md:text-left">
                                     ACL Pi-a-thon Contest
