@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 
 // import Image  from "next/image";
 import Typewriter from "typewriter-effect";
+import { faFile, faFileAlt } from "@fortawesome/free-solid-svg-icons";
 
 function HomeBackground() {
     const [timer, setTimer] = useState(0);
@@ -60,16 +61,29 @@ function HomeBackground() {
                             </span>
                         </a>
                     </span>
-                    <span className="mr-4 lg:mr-6">
+                    <span className="mr-4 lg:mr-7">
                         <a
                             target="_blank"
                             rel="noopener noreferrer"
                             href="https://www.linkedin.com/in/yihongs/"
-                            className="mr-4 transition-colors lg:mr-6 hover:text-green">
+                            className="transition-colors hover:text-green">
                             <span className="icon">
                                 <FontAwesomeIcon
                                     className="fa-lg hover:animate-[wiggle_0.3s_ease-in-out_infinite]"
                                     icon={fab.faLinkedin}></FontAwesomeIcon>
+                            </span>
+                        </a>
+                    </span>
+                    <span className="mr-4 lg:mr-6">
+                        <a
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            href="/docs/resume.pdf"
+                            className="transition-colors hover:text-green">
+                            <span className="icon">
+                                <FontAwesomeIcon
+                                    className="fa-lg hover:animate-[wiggle_0.3s_ease-in-out_infinite]"
+                                    icon={faFileAlt}></FontAwesomeIcon>
                             </span>
                         </a>
                     </span>
