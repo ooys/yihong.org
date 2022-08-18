@@ -1,7 +1,7 @@
 import HomeAnimation from "../components/animations/HomeAnimation";
 import HomeBackground from "../components/animations/HomeBackground";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { fab } from "@fortawesome/free-brands-svg-icons";
+import { fab, faDiscord } from "@fortawesome/free-brands-svg-icons";
 import {
     faPython,
     faJsSquare,
@@ -15,17 +15,32 @@ import {
     faChevronDown,
     faExternalLinkAlt,
     faBook,
+    faEnvelope,
 } from "@fortawesome/free-solid-svg-icons";
 import Sun from "/components/Sun.js";
 import HomeTransition from "../components/animations/HomeTransition";
 
 export default function Home() {
     const ref = useRef();
+    const [copied, setCopied] = useState(false);
+
+    const copyToClipboard = (item, text) => {
+        navigator.clipboard.writeText(text).then(() => {
+            setCopied(item);
+            setTimeout(() => {
+                setCopied(false);
+            }, 1000);
+        });
+        // This is just personal preference.
+        // I prefer to not show the whole text area selected.
+        // e.target.focus();
+        // this.setState({ copySuccess: "Copied!" });
+    };
 
     return (
         <>
             <Parallax
-                pages={4}
+                pages={4.2}
                 style={{ top: "0", left: "0", backgroundColor: "white" }}
                 ref={ref}>
                 <ParallaxLayer offset={1} speed={0.1}>
@@ -44,7 +59,7 @@ export default function Home() {
                         <a
                             href="javascript:void(0)"
                             onClick={() => ref.current.scrollTo(1)}
-                            className=" transition-colors hover:text-blue text-[1rem] animate-[appear_8s_ease-in-out_forwards] ">
+                            className="transition-colors hover:text-blue text-[1rem] animate-[appear_8s_ease-in-out_forwards] ">
                             <span className="icon">
                                 <FontAwesomeIcon
                                     className="fa-lg"
@@ -95,8 +110,8 @@ export default function Home() {
                         <div className="grid grid-cols-1 md:grid-cols-2">
                             <img
                                 src="/images/rvhnhs.png"
-                                className="rounded-2xl shadow-xl max-w-[80vw] md:max-w-[60vw] lg:max-w-[50vw]"></img>
-                            <div className=" bg-white shadow-xl	mt-[-2vh] md:mt-[8vh] px-[2rem] py-[2rem] w-[80vw] md:w-[40vw] rounded-2xl h-auto">
+                                className=" shadow-xl max-w-[80vw] md:max-w-[60vw] lg:max-w-[50vw]"></img>
+                            <div className=" bg-white shadow-xl	mt-[-2vh] md:mt-[8vh] px-[2rem] py-[2rem] w-[80vw] md:w-[40vw]  h-auto">
                                 <div className="text-black font-title text-[5vw] md:text-[4vw] lg:text-[2vw] text-center md:text-left">
                                     Riverside NHS Portal
                                 </div>
@@ -153,7 +168,7 @@ export default function Home() {
                             </div>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 mt-[40vh]">
-                            <div className=" bg-white shadow-xl	mt-[-2vh] md:mt-[15vh] px-[2rem] py-[2rem] w-[80vw] md:w-[40vw] rounded-2xl h-auto z-10">
+                            <div className=" bg-white shadow-xl	mt-[-2vh] md:mt-[15vh] px-[2rem] py-[2rem] w-[80vw] md:w-[40vw] h-auto z-10">
                                 <div className="text-black font-title text-[5vw] md:text-[4vw] lg:text-[2vw] text-center md:text-left">
                                     ACL Pi-a-thon Contest
                                 </div>
@@ -204,7 +219,7 @@ export default function Home() {
                             </div>
                             <img
                                 src="/images/piathon.png"
-                                className="rounded-2xl shadow-xl max-w-[80vw] md:max-w-[60vw] lg:max-w-[50vw] md:ml-[-10vw]"></img>
+                                className="shadow-xl max-w-[80vw] md:max-w-[60vw] lg:max-w-[50vw] md:ml-[-10vw]"></img>
                         </div>
                     </div>
                 </ParallaxLayer>
@@ -214,7 +229,7 @@ export default function Home() {
                 <ParallaxLayer offset={2.75} speed={1.5} style={{}}>
                     <div className=" h-[100vh] px-[10vw]">
                         <div className="grid grid-cols-1 md:grid-cols-2 mt-[50vh]">
-                            <div className=" bg-white shadow-xl	mt-[-2vh] md:mt-[15vh] px-[2rem] py-[2rem] w-[80vw] md:w-[40vw] rounded-2xl h-auto z-10">
+                            <div className=" bg-white shadow-xl	mt-[-2vh] md:mt-[15vh] px-[2rem] py-[2rem] w-[80vw] md:w-[40vw] h-auto z-10">
                                 <div className="text-black font-title text-[5vw] md:text-[4vw] lg:text-[2vw] text-center md:text-left">
                                     Starzam
                                 </div>
@@ -280,7 +295,82 @@ export default function Home() {
                             </div>
                         </div>
                     </div>
+                    {/* <div className="bg-white h-[20vh] mt-[-21vh]">
+                        <div className="text-black">Yihong Song</div>
+                    </div> */}
                 </ParallaxLayer>
+                <ParallaxLayer offset={3.2} speed={0.25}>
+                    <div className="bg-black h-[90vh] mt-[15vh] pt-[15vh] px-[15vw]">
+                        <div className="text-white font-title text-[8vw] md:text-[4vw] lg:text-[4vw] ">
+                            Contact Me
+                        </div>
+                        <div className="text-white font-title mt-[5vh] text-[6vw] md:text-[2vw] transition-colors hover:text-green w-[13rem]">
+                            <a
+                                href="javascript: void(0)"
+                                onClick={() => {
+                                    copyToClipboard(
+                                        "Discord",
+                                        "michaelsong4399#2750"
+                                    );
+                                }}>
+                                <span className="icon pr-[1.5rem]">
+                                    <FontAwesomeIcon
+                                        className="fa-lg "
+                                        icon={faDiscord}></FontAwesomeIcon>
+                                </span>
+                                {copied == "Discord" ? "Copied!" : "Discord"}
+                            </a>
+                        </div>
+                        <div className="text-white font-title mt-[5vh] text-[6vw] md:text-[2vw] transition-colors hover:text-green w-[12rem]">
+                            <a
+                                href="javascript: void(0)"
+                                onClick={() => {
+                                    copyToClipboard("Email", "song@yihong.org");
+                                }}>
+                                <span className="icon pr-[1.9rem] pl-[0.25rem]">
+                                    <FontAwesomeIcon
+                                        className="fa-lg "
+                                        icon={faEnvelope}></FontAwesomeIcon>
+                                </span>
+                                {copied == "Email" ? "Copied!" : "Email"}
+                            </a>
+                        </div>
+                    </div>
+                </ParallaxLayer>
+                {/* <ParallaxLayer offset={3} speed={2} className="mt-[15vh]">
+                    
+                    <div className="bg-green h-[60vh] px-[15vw] pt-[8vh]">
+                        <div className="text-white font-title text-[8vw] md:text-[4vw] lg:text-[4vw] ">
+                            Composer
+                        </div>
+                        <div className="text-white font-subtitle lg:text-[1.5vw] md:text-[2vw]">
+                            I am a composer and arranger for
+                            contemporary-classical chamber orchestra music.
+                        </div>
+                        <div className="text-white pt-[4vh] text-[6vw] md:text-[3vw] lg:text-[2.5vw]">
+                            <span className="icon pr-[1.5rem]">
+                                <FontAwesomeIcon
+                                    className="fa-lg"
+                                    icon={fab.faReact}></FontAwesomeIcon>
+                            </span>
+                            <span className="icon pr-[1.5rem]">
+                                <FontAwesomeIcon
+                                    className="fa-lg"
+                                    icon={fab.faPython}></FontAwesomeIcon>
+                            </span>
+                            <span className="icon pr-[1.5rem]">
+                                <FontAwesomeIcon
+                                    className="fa-lg"
+                                    icon={fab.faJsSquare}></FontAwesomeIcon>
+                            </span>
+                            <span className="icon">
+                                <FontAwesomeIcon
+                                    className="fa-lg"
+                                    icon={fab.faJava}></FontAwesomeIcon>
+                            </span>
+                        </div>
+                    </div>
+                </ParallaxLayer> */}
             </Parallax>
         </>
     );
