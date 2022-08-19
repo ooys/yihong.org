@@ -2,13 +2,13 @@ import HomeAnimation from "../components/animations/HomeAnimation";
 import HomeBackground from "../components/animations/HomeBackground";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { fab, faDiscord } from "@fortawesome/free-brands-svg-icons";
-import {
-    faPython,
-    faJsSquare,
-    faJava,
-    faReact,
-    faGithub,
-} from "@fortawesome/free-brands-svg-icons";
+// import {
+//     faPython,
+//     faJsSquare,
+//     faJava,
+//     faReact,
+//     faGithub,
+// } from "@fortawesome/free-brands-svg-icons";
 import { Parallax, ParallaxLayer } from "@react-spring/parallax";
 import React, { useState, useEffect, useRef } from "react";
 import {
