@@ -1,0 +1,74 @@
+---
+// Critical CSS for minimal design
+const criticalCSS = `
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{font-family:system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif;line-height:1.6;color:#000}
+  body{min-height:100vh;background:#fff;padding:2rem;max-width:600px;margin:0 auto}
+  h1{font-size:2rem;font-weight:400;margin-bottom:1rem}
+  p{margin-bottom:1rem}
+  a{color:#000;text-decoration:underline}
+  a:hover{text-decoration:none}
+`;
+
+// Preload critical resources
+const preloadResources = [
+  { href: '/favicon.svg', as: 'image', type: 'image/svg+xml' },
+];
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Essential meta tags -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="generator" content={Astro.generator} />
+
+  <!-- Performance optimizations -->
+  <meta http-equiv="X-DNS-Prefetch-Control" content="on" />
+  <meta name="format-detection" content="telephone=no" />
+
+  <!-- SEO and social meta tags -->
+  <title>Yihong Song</title>
+  <meta name="description" content="Yihong Song - Software Engineer" />
+  <meta name="author" content="Yihong Song" />
+  <meta name="robots" content="index, follow" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://yihong.org/" />
+  <meta property="og:title" content="Yihong Song" />
+  <meta property="og:description" content="Yihong Song - Software Engineer" />
+  <meta property="og:site_name" content="Yihong Song" />
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary" />
+  <meta property="twitter:url" content="https://yihong.org/" />
+  <meta property="twitter:title" content="Yihong Song" />
+  <meta property="twitter:description" content="Yihong Song - Software Engineer" />
+
+  <!-- Favicon and icons -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="apple-touch-icon" href="/favicon.svg" />
+
+  <!-- Preload critical resources -->
+  {preloadResources.map(resource => (
+    <link rel="preload" href={resource.href} as={resource.as} type={resource.type} />
+  ))}
+
+  <!-- Critical CSS inlined for maximum performance -->
+  <style set:html={criticalCSS}></style>
+</head>
+<body>
+  <h1>Yihong Song</h1>
+
+  <p>Software engineer passionate about building efficient and user-friendly applications.</p>
+
+  <p>
+    <a href="mailto:song[at]yiho.ng">song[at]yiho.ng</a><br>
+    <a href="https://linkedin.com/in/yihongs">LinkedIn</a><br>
+    <a href="https://github.com/ooys">GitHub</a><br>
+    <a href="/resume.pdf">Resume</a>
+  </p>
+</body>
+</html>

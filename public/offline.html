@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Offline - Yihong</title>
+        <style>
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+            html {
+                font-family: system-ui, -apple-system, BlinkMacSystemFont,
+                    Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif;
+                line-height: 1.6;
+                color: #333;
+            }
+            body {
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                text-align: center;
+                padding: 2rem;
+            }
+            h1 {
+                font-size: clamp(2rem, 4vw, 3rem);
+                margin-bottom: 1rem;
+            }
+            p {
+                font-size: clamp(1rem, 2vw, 1.2rem);
+                opacity: 0.9;
+                margin-bottom: 2rem;
+            }
+            .retry {
+                display: inline-block;
+                padding: 0.8rem 1.5rem;
+                background: rgba(255, 255, 255, 0.2);
+                color: white;
+                text-decoration: none;
+                border-radius: 50px;
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                transition: all 0.3s ease;
+            }
+            .retry:hover {
+                background: rgba(255, 255, 255, 0.3);
+                transform: translateY(-2px);
+            }
+        </style>
+    </head>
+    <body>
+        <h1>You're Offline</h1>
+        <p>
+            It looks like you're not connected to the internet. Check your
+            connection and try again.
+        </p>
+        <a href="/" class="retry">Try Again</a>
+        <script>
+            // Auto-retry when connection is restored
+            window.addEventListener("online", () => {
+                window.location.reload();
+            });
+        </script>
+    </body>
+</html>

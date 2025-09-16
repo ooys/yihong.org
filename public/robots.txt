@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://yihong.org/sitemap-index.xml
