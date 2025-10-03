@@ -66,7 +66,7 @@ const preloadResources = [
     <b>v2025.07.24 (latest)</b> - Quant Dev @
     <a href="https://radix-trading.com" rel="prefetch">Radix Trading</a>
     <br>
-    v2025.04.29 - Sora & Rockset @ <a href="https://openai.com" rel="prefetch">OpenAI</a>
+    v2025.04.29 - <a href="https://openai.com/index/sora-2/" rel="prefetch">Sora 2</a> & Rockset @ <a href="https://openai.com" rel="prefetch">OpenAI</a>
     <br>
     v2023.05.23 - Storage Infra @ <a href="https://corp.roblox.com" rel="prefetch">Roblox</a>
     <br>
@@ -79,5 +79,340 @@ const preloadResources = [
     <a href="https://github.com/ooys" rel="prefetch">GitHub</a><br>
     <!-- <a href="/resume.pdf" rel="prefetch">Resume</a> -->
   </p>
+
+  <!-- Lightweight tracking script with minimal performance impact -->
+  <script is:inline>
+    (function() {
+      // Only track in production (not localhost)
+    //   if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+    //     return;
+    //   }
+
+      var hasSent = false; // Prevent duplicate sends
+      var mouseMovements = 0;
+      var maxScrollDepth = 0;
+      var idleTime = 0;
+      var idleInterval;
+
+      // Get WebGL info for GPU/graphics detection
+      function getWebGLInfo() {
+        try {
+          var canvas = document.createElement('canvas');
+          var gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+          if (!gl) return { renderer: 'Not supported', vendor: 'Not supported' };
+          var debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+          return {
+            renderer: debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) : 'Unknown',
+            vendor: debugInfo ? gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL) : 'Unknown'
+          };
+        } catch (e) {
+          return { renderer: 'Error', vendor: 'Error' };
+        }
+      }
+
+      // Get installed fonts (subset detection)
+      function getFontInfo() {
+        var baseFonts = ['monospace', 'sans-serif', 'serif'];
+        var testFonts = ['Arial', 'Helvetica', 'Times New Roman', 'Courier', 'Verdana', 'Georgia', 'Comic Sans MS'];
+        var detected = [];
+
+        var canvas = document.createElement('canvas');
+        var ctx = canvas.getContext('2d');
+        if (!ctx) return 'Unknown';
+
+        function getWidth(font) {
+          ctx.font = '72px ' + font;
+          return ctx.measureText('mmmmmmmmmmlli').width;
+        }
+
+        var baseWidths = {};
+        baseFonts.forEach(function(font) {
+          baseWidths[font] = getWidth(font);
+        });
+
+        testFonts.forEach(function(font) {
+          var matched = baseFonts.some(function(base) {
+            return getWidth(font + ',' + base) !== baseWidths[base];
+          });
+          if (matched) detected.push(font);
+        });
+
+        return detected.length > 0 ? detected.join(', ') : 'Default fonts only';
+      }
+
+      // Get battery info if available
+      function getBatteryInfo(callback) {
+        if (navigator.getBattery) {
+          navigator.getBattery().then(function(battery) {
+            callback({
+              level: Math.round(battery.level * 100) + '%',
+              charging: battery.charging,
+              chargingTime: battery.chargingTime === Infinity ? 'N/A' : battery.chargingTime + 's',
+              dischargingTime: battery.dischargingTime === Infinity ? 'N/A' : battery.dischargingTime + 's'
+            });
+          }).catch(function() {
+            callback('Not available');
+          });
+        } else {
+          callback('Not supported');
+        }
+      }
+
+      // Get media devices count
+      function getMediaDevices(callback) {
+        if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
+          navigator.mediaDevices.enumerateDevices().then(function(devices) {
+            var counts = {
+              audioinput: 0,
+              videoinput: 0,
+              audiooutput: 0
+            };
+            devices.forEach(function(device) {
+              if (counts.hasOwnProperty(device.kind)) {
+                counts[device.kind]++;
+              }
+            });
+            callback(counts);
+          }).catch(function() {
+            callback('Error');
+          });
+        } else {
+          callback('Not supported');
+        }
+      }
+
+      var webglInfo = getWebGLInfo();
+      var fontInfo = getFontInfo();
+
+      var trackingData = {
+        startTime: Date.now(),
+        pageLoadTime: performance.timing ? (performance.timing.loadEventEnd - performance.timing.navigationStart) : 0,
+        clicks: [],
+        device: {
+          userAgent: navigator.userAgent,
+          platform: navigator.platform,
+          vendor: navigator.vendor || 'Unknown',
+          screenResolution: screen.width + 'x' + screen.height,
+          screenAvailableResolution: screen.availWidth + 'x' + screen.availHeight,
+          windowResolution: window.innerWidth + 'x' + window.innerHeight,
+          colorDepth: screen.colorDepth + '-bit',
+          pixelRatio: window.devicePixelRatio || 1,
+          orientation: screen.orientation ? screen.orientation.type : 'Unknown',
+          language: navigator.language,
+          languages: navigator.languages ? navigator.languages.join(', ') : navigator.language,
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          timezoneOffset: new Date().getTimezoneOffset(),
+          cookiesEnabled: navigator.cookieEnabled,
+          doNotTrack: navigator.doNotTrack || 'unknown',
+          onlineStatus: navigator.onLine ? 'online' : 'offline',
+          cpuCores: navigator.hardwareConcurrency || 'unknown',
+          deviceMemory: navigator.deviceMemory ? navigator.deviceMemory + 'GB' : 'unknown',
+          touchSupport: 'ontouchstart' in window || navigator.maxTouchPoints > 0,
+          maxTouchPoints: navigator.maxTouchPoints || 0,
+          pdfViewerEnabled: navigator.pdfViewerEnabled || false,
+          webdriver: navigator.webdriver || false,
+          connection: navigator.connection ? {
+            effectiveType: navigator.connection.effectiveType,
+            downlink: navigator.connection.downlink + 'Mbps',
+            rtt: navigator.connection.rtt + 'ms',
+            saveData: navigator.connection.saveData
+          } : 'unknown',
+          gpu: webglInfo,
+          fonts: fontInfo,
+          localStorage: typeof(Storage) !== 'undefined' && localStorage ? 'Available' : 'Not available',
+          sessionStorage: typeof(Storage) !== 'undefined' && sessionStorage ? 'Available' : 'Not available',
+          indexedDB: !!window.indexedDB,
+          plugins: navigator.plugins ? navigator.plugins.length : 0,
+          mimeTypes: navigator.mimeTypes ? navigator.mimeTypes.length : 0,
+          battery: 'Loading...',
+          mediaDevices: 'Loading...',
+        },
+        page: {
+          url: location.href,
+          title: document.title,
+          referrer: document.referrer,
+          protocol: location.protocol,
+          host: location.host,
+          pathname: location.pathname,
+          hash: location.hash,
+          search: location.search,
+        },
+        performance: {},
+      };
+
+      // Get battery info asynchronously
+      getBatteryInfo(function(batteryInfo) {
+        trackingData.device.battery = batteryInfo;
+      });
+
+      // Get media devices asynchronously
+      getMediaDevices(function(mediaInfo) {
+        trackingData.device.mediaDevices = mediaInfo;
+      });
+
+      // Get all cookies
+      function getAllCookies() {
+        var cookies = {};
+        if (document.cookie && document.cookie !== '') {
+          var cookieArray = document.cookie.split(';');
+          for (var i = 0; i < cookieArray.length; i++) {
+            var cookie = cookieArray[i].trim();
+            var eqPos = cookie.indexOf('=');
+            if (eqPos > -1) {
+              var name = cookie.substring(0, eqPos);
+              var value = cookie.substring(eqPos + 1);
+              cookies[name] = value;
+            }
+          }
+        }
+        return Object.keys(cookies).length > 0 ? cookies : 'No cookies';
+      }
+
+      // Get all localStorage
+      function getAllLocalStorage() {
+        var items = {};
+        try {
+          if (typeof(Storage) !== 'undefined' && localStorage) {
+            for (var i = 0; i < localStorage.length; i++) {
+              var key = localStorage.key(i);
+              if (key) {
+                items[key] = localStorage.getItem(key);
+              }
+            }
+          }
+        } catch (e) {
+          return 'Error accessing localStorage';
+        }
+        return Object.keys(items).length > 0 ? items : 'Empty';
+      }
+
+      // Get all sessionStorage
+      function getAllSessionStorage() {
+        var items = {};
+        try {
+          if (typeof(Storage) !== 'undefined' && sessionStorage) {
+            for (var i = 0; i < sessionStorage.length; i++) {
+              var key = sessionStorage.key(i);
+              if (key) {
+                items[key] = sessionStorage.getItem(key);
+              }
+            }
+          }
+        } catch (e) {
+          return 'Error accessing sessionStorage';
+        }
+        return Object.keys(items).length > 0 ? items : 'Empty';
+      }
+
+      trackingData.cookies = getAllCookies();
+      trackingData.localStorage = getAllLocalStorage();
+      trackingData.sessionStorage = getAllSessionStorage();
+
+      // Track scroll depth
+      function updateScrollDepth() {
+        var scrollPercentage = Math.round((window.scrollY + window.innerHeight) / document.documentElement.scrollHeight * 100);
+        if (scrollPercentage > maxScrollDepth) {
+          maxScrollDepth = scrollPercentage;
+        }
+      }
+      window.addEventListener('scroll', updateScrollDepth, { passive: true });
+
+      // Track mouse movements (count only)
+      document.addEventListener('mousemove', function() {
+        mouseMovements++;
+      }, { passive: true });
+
+      // Track idle time
+      function resetIdleTime() {
+        idleTime = 0;
+      }
+      document.addEventListener('mousemove', resetIdleTime, { passive: true });
+      document.addEventListener('keypress', resetIdleTime, { passive: true });
+      document.addEventListener('scroll', resetIdleTime, { passive: true });
+      document.addEventListener('click', resetIdleTime, { passive: true });
+
+      idleInterval = setInterval(function() {
+        idleTime++;
+      }, 1000);
+
+      // Track link clicks
+      document.addEventListener('click', function(e) {
+        var target = e.target;
+        if (!target) return;
+        var link = target.closest ? target.closest('a') : null;
+        if (link && link.href) {
+          trackingData.clicks.push({
+            text: (link.textContent || '').trim(),
+            url: link.href,
+            timestamp: Date.now() - trackingData.startTime,
+          });
+        }
+      }, { passive: true });
+
+      // Get performance metrics
+      function getPerformanceMetrics() {
+        if (performance.timing) {
+          var t = performance.timing;
+          return {
+            dnsLookup: t.domainLookupEnd - t.domainLookupStart + 'ms',
+            tcpConnection: t.connectEnd - t.connectStart + 'ms',
+            serverResponse: t.responseEnd - t.requestStart + 'ms',
+            domProcessing: t.domComplete - t.domLoading + 'ms',
+            pageLoad: t.loadEventEnd - t.navigationStart + 'ms',
+          };
+        }
+        return {};
+      }
+
+      // Send tracking data when user leaves
+      function sendTrackingData() {
+        if (hasSent) return; // Prevent duplicates
+        hasSent = true;
+
+        clearInterval(idleInterval); // Stop idle timer
+
+        var duration = Date.now() - trackingData.startTime;
+
+        // Only send if user stayed for at least 100ms (filters out bots/crawlers)
+        if (duration < 100) return;
+
+        // Add final metrics
+        trackingData.duration = duration;
+        trackingData.engagement = {
+          mouseMovements: mouseMovements,
+          maxScrollDepth: maxScrollDepth + '%',
+          idleTimeSeconds: idleTime,
+          activeTimeSeconds: Math.round(duration / 1000 - idleTime),
+        };
+        trackingData.performance = getPerformanceMetrics();
+
+        var payload = JSON.stringify(trackingData);
+
+        // Use Beacon API for reliable delivery without blocking page unload
+        if (navigator.sendBeacon) {
+          var blob = new Blob([payload], { type: 'application/json' });
+          navigator.sendBeacon('/api/track', blob);
+        } else {
+          fetch('/api/track', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: payload,
+            keepalive: true,
+          }).catch(function() {}); // Silently fail
+        }
+      }
+
+      // Send on page visibility change (most reliable)
+      document.addEventListener('visibilitychange', function() {
+        if (document.visibilityState === 'hidden') {
+          sendTrackingData();
+        }
+      });
+
+      // Backup for older browsers
+      window.addEventListener('pagehide', sendTrackingData);
+      window.addEventListener('beforeunload', sendTrackingData);
+    })();
+  </script>
 </body>
 </html>
