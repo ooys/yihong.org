@@ -64,15 +64,41 @@ interface TrackingData {
 
 async function getIPInfo(ip: string) {
     try {
-        // Using ipapi.co for comprehensive geolocation and ISP data
-        const response = await fetch(`https://ipapi.co/${ip}/json/`);
-        if (!response.ok) return null;
-        const data = await response.json();
+        // Use multiple geolocation services for maximum accuracy and cross-reference data
+        const results = await Promise.allSettled([
+            // Service 1: ipapi.co (most comprehensive, 1000 req/day free)
+            fetch(`https://ipapi.co/${ip}/json/`).then((r) =>
+                r.ok ? r.json() : null
+            ),
 
-        // Add additional lookups
-        const enrichedData = { ...data };
+            // Service 2: ip-api.com (free, unlimited but rate limited to 45 req/min)
+            fetch(`http://ip-api.com/json/${ip}?fields=66846719`).then((r) =>
+                r.ok ? r.json() : null
+            ),
 
-        // Try to get reverse DNS
+            // Service 3: ipinfo.io (50k req/month free)
+            fetch(`https://ipinfo.io/${ip}/json`).then((r) =>
+                r.ok ? r.json() : null
+            ),
+        ]);
+
+        // Extract data from each service
+        const ipapiData =
+            results[0].status === "fulfilled" ? results[0].value : null;
+        const ipApiComData =
+            results[1].status === "fulfilled" ? results[1].value : null;
+        const ipinfoData =
+            results[2].status === "fulfilled" ? results[2].value : null;
+
+        // If all services failed, return null
+        if (!ipapiData && !ipApiComData && !ipinfoData) {
+            return null;
+        }
+
+        // Combine and cross-reference data for maximum accuracy
+        const enrichedData: any = {};
+
+        // Get reverse DNS (hostname)
         try {
             const rdnsResponse = await fetch(
                 `https://dns.google/resolve?name=${ip.split(".").reverse().join(".")}.in-addr.arpa&type=PTR`
@@ -80,70 +106,165 @@ async function getIPInfo(ip: string) {
             if (rdnsResponse.ok) {
                 const rdnsData = await rdnsResponse.json();
                 if (rdnsData.Answer && rdnsData.Answer.length > 0) {
-                    enrichedData.reverseDNS = rdnsData.Answer[0].data;
+                    enrichedData.reverseDNS = rdnsData.Answer[0].data.replace(
+                        /\.$/,
+                        ""
+                    );
                 }
             }
         } catch (e) {
-            enrichedData.reverseDNS = "Not available";
+            enrichedData.reverseDNS = ipinfoData?.hostname || "Not available";
         }
 
-        // Detect if IP is from datacenter/hosting/VPN
-        enrichedData.ipType = "Unknown";
-        if (data.org) {
-            const org = data.org.toLowerCase();
-            if (
-                org.includes("hosting") ||
-                org.includes("cloud") ||
-                org.includes("datacenter") ||
-                org.includes("digital ocean") ||
-                org.includes("amazon") ||
-                org.includes("google") ||
-                org.includes("microsoft") ||
-                org.includes("linode") ||
-                org.includes("vultr")
-            ) {
-                enrichedData.ipType = "Datacenter/Hosting";
-            } else if (org.includes("vpn") || org.includes("proxy")) {
-                enrichedData.ipType = "VPN/Proxy";
-            } else if (
-                org.includes("isp") ||
-                org.includes("telecom") ||
-                org.includes("broadband") ||
-                org.includes("cable") ||
-                org.includes("fiber")
-            ) {
-                enrichedData.ipType = "Residential ISP";
-            } else if (
-                org.includes("mobile") ||
-                org.includes("wireless") ||
-                org.includes("cellular")
-            ) {
-                enrichedData.ipType = "Mobile/Cellular";
-            }
-        }
-
-        // Additional enrichment from ipapi.co data
-        enrichedData.asnDetails = {
-            asn: data.asn || "Unknown",
-            org: data.org || "Unknown",
-            network: data.network || "Unknown",
-        };
-
+        // Merge location data (use most specific/accurate from all sources)
         enrichedData.locationDetails = {
-            country: data.country_name || "Unknown",
-            countryCode: data.country_code || "Unknown",
-            region: data.region || "Unknown",
-            regionCode: data.region_code || "Unknown",
-            city: data.city || "Unknown",
-            postal: data.postal || "Unknown",
-            latitude: data.latitude || "Unknown",
-            longitude: data.longitude || "Unknown",
-            timezone: data.timezone || "Unknown",
-            utcOffset: data.utc_offset || "Unknown",
-            countryCallingCode: data.country_calling_code || "Unknown",
-            currency: data.currency || "Unknown",
-            languages: data.languages || "Unknown",
+            city:
+                ipapiData?.city ||
+                ipApiComData?.city ||
+                ipinfoData?.city ||
+                "Unknown",
+            region:
+                ipapiData?.region ||
+                ipApiComData?.regionName ||
+                ipinfoData?.region ||
+                "Unknown",
+            regionCode:
+                ipapiData?.region_code || ipApiComData?.region || "Unknown",
+            country:
+                ipapiData?.country_name ||
+                ipApiComData?.country ||
+                ipinfoData?.country ||
+                "Unknown",
+            countryCode:
+                ipapiData?.country_code ||
+                ipApiComData?.countryCode ||
+                ipinfoData?.country ||
+                "Unknown",
+            postal:
+                ipapiData?.postal ||
+                ipApiComData?.zip ||
+                ipinfoData?.postal ||
+                "Unknown",
+            latitude:
+                ipapiData?.latitude ||
+                ipApiComData?.lat ||
+                (ipinfoData?.loc
+                    ? parseFloat(ipinfoData.loc.split(",")[0])
+                    : "Unknown"),
+            longitude:
+                ipapiData?.longitude ||
+                ipApiComData?.lon ||
+                (ipinfoData?.loc
+                    ? parseFloat(ipinfoData.loc.split(",")[1])
+                    : "Unknown"),
+            timezone:
+                ipapiData?.timezone ||
+                ipApiComData?.timezone ||
+                ipinfoData?.timezone ||
+                "Unknown",
+            utcOffset: ipapiData?.utc_offset || "Unknown",
+            countryCallingCode: ipapiData?.country_calling_code || "Unknown",
+            currency:
+                ipapiData?.currency || ipApiComData?.currency || "Unknown",
+            languages: ipapiData?.languages || "Unknown",
         };
+
+        // Merge ISP/Network data from all sources
+        enrichedData.org =
+            ipapiData?.org || ipApiComData?.isp || ipinfoData?.org || "Unknown";
+        enrichedData.isp =
+            ipApiComData?.isp || ipapiData?.org || ipinfoData?.org || "Unknown";
+        enrichedData.asn =
+            ipapiData?.asn ||
+            ipApiComData?.as?.split(" ")[0] ||
+            ipinfoData?.asn ||
+            "Unknown";
+        enrichedData.network = ipapiData?.network || "Unknown";
+
+        // ASN Details with full name
+        enrichedData.asnDetails = {
+            asn: enrichedData.asn,
+            org: enrichedData.org,
+            network: enrichedData.network,
+            asnName:
+                ipApiComData?.as ||
+                ipapiData?.asn ||
+                ipinfoData?.asn ||
+                "Unknown",
+        };
+
+        // Enhanced IP type detection with data from multiple sources
+        enrichedData.proxy = ipApiComData?.proxy || false;
+        enrichedData.hosting = ipApiComData?.hosting || false;
+        enrichedData.mobile = ipApiComData?.mobile || false;
+
+        const org = enrichedData.org.toLowerCase();
+        if (
+            enrichedData.hosting ||
+            org.includes("hosting") ||
+            org.includes("cloud") ||
+            org.includes("datacenter") ||
+            org.includes("data center") ||
+            org.includes("digital ocean") ||
+            org.includes("digitalocean") ||
+            org.includes("amazon") ||
+            org.includes("aws") ||
+            org.includes("google cloud") ||
+            org.includes("microsoft azure") ||
+            org.includes("linode") ||
+            org.includes("vultr") ||
+            org.includes("ovh") ||
+            org.includes("hetzner")
+        ) {
+            enrichedData.ipType = "Datacenter/Hosting";
+        } else if (
+            enrichedData.proxy ||
+            org.includes("vpn") ||
+            org.includes("proxy")
+        ) {
+            enrichedData.ipType = "VPN/Proxy";
+        } else if (
+            enrichedData.mobile ||
+            org.includes("mobile") ||
+            org.includes("wireless") ||
+            org.includes("cellular") ||
+            org.includes("t-mobile") ||
+            org.includes("verizon") ||
+            org.includes("at&t") ||
+            org.includes("att")
+        ) {
+            enrichedData.ipType = "Mobile/Cellular";
+        } else if (
+            org.includes("isp") ||
+            org.includes("telecom") ||
+            org.includes("broadband") ||
+            org.includes("cable") ||
+            org.includes("fiber") ||
+            org.includes("comcast") ||
+            org.includes("spectrum") ||
+            org.includes("cox") ||
+            org.includes("sbcglobal") ||
+            org.includes("charter")
+        ) {
+            enrichedData.ipType = "Residential ISP";
+        } else {
+            enrichedData.ipType = "Unknown";
+        }
+
+        // Additional metadata from ip-api.com
+        if (ipApiComData) {
+            enrichedData.metroCode = ipApiComData.district || "Unknown";
+            enrichedData.autonomousSystem = ipApiComData.as || "Unknown";
+        }
+
+        // Accuracy indicator - show which services provided data
+        enrichedData.dataSourcesUsed = [
+            ipapiData ? "ipapi.co" : null,
+            ipApiComData ? "ip-api.com" : null,
+            ipinfoData ? "ipinfo.io" : null,
+        ].filter(Boolean);
+
+        enrichedData.accuracyScore = enrichedData.dataSourcesUsed.length;
 
         return enrichedData;
     } catch (error) {
@@ -382,6 +503,12 @@ async function sendDiscordNotification(
                               : "",
                           ipInfo.languages
                               ? `**Languages:** ${ipInfo.locationDetails?.languages}`
+                              : "",
+                          ipInfo.dataSourcesUsed
+                              ? `**Data Sources:** ${ipInfo.dataSourcesUsed.join(", ")}`
+                              : "",
+                          ipInfo.accuracyScore
+                              ? `**Accuracy:** ${ipInfo.accuracyScore}/3 ⭐`
                               : "",
                       ]
                           .filter(Boolean)
