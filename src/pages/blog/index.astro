@@ -1,0 +1,60 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+type BlogPost = CollectionEntry<'blog'>;
+
+// Get all blog posts
+const allPosts = await getCollection('blog', (entry: BlogPost) => {
+  // Only show public posts in the blog index
+  // In dev mode, also show unlisted posts with a label
+  if (entry.data.visibility === 'private') return false;
+  if (entry.data.visibility === 'unlisted' && import.meta.env.PROD) return false;
+  return true;
+});
+
+// Sort by date, newest first
+const posts = allPosts.sort((a: BlogPost, b: BlogPost) =>
+  b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+function formatDate(date: Date): string {
+  return new Intl.DateTimeFormat('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  }).format(date);
+}
+---
+
+<BaseLayout
+  title="Blog | Yihong Song"
+  description="Thoughts and writings by Yihong Song"
+>
+  <h1>Blog</h1>
+
+  <p>
+    <a href="/">← Back to Home</a>
+  </p>
+
+  <ul class="blog-post-list">
+    {posts.map((post: BlogPost) => (
+      <li>
+        <h2 class="blog-post-title">
+          <a href={`/blog/${post.slug}`}>{post.data.title}</a>
+        </h2>
+        <div class="blog-post-meta">
+          <time datetime={post.data.pubDate.toISOString()}>
+            {formatDate(post.data.pubDate)}
+          </time>
+          {post.data.visibility === 'unlisted' && <span> · Unlisted (Dev Only)</span>}
+        </div>
+        <p class="blog-post-excerpt">{post.data.description}</p>
+      </li>
+    ))}
+  </ul>
+
+  {posts.length === 0 && (
+    <p>No posts yet. Check back soon!</p>
+  )}
+</BaseLayout>

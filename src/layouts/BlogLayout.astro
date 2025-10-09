@@ -1,0 +1,37 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  pubDate: Date;
+  author?: string;
+  visibility?: 'public' | 'unlisted' | 'private';
+}
+
+const { title, description, pubDate, author = 'Yihong Song', visibility = 'public' } = Astro.props;
+
+const formattedDate = new Intl.DateTimeFormat('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+}).format(pubDate);
+---
+
+<BaseLayout title={`${title} | Yihong Song`} description={description} ogType="article">
+  <article>
+    <a href="/blog" class="back-link">← Back to Blog</a>
+
+    <h1>{title}</h1>
+
+    <div class="blog-post-meta">
+      <time datetime={pubDate.toISOString()}>{formattedDate}</time>
+      {author && <span> · {author}</span>}
+      {visibility === 'unlisted' && <span> · 🔗 Unlisted</span>}
+      {visibility === 'private' && <span> · 🔒 Private (Dev Only)</span>}
+    </div>
+
+    <slot />
+  </article>
+</BaseLayout>
+

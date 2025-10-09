@@ -52,4 +52,13 @@ export default defineConfig({
 
     // Site configuration for SEO
     site: "https://yihong.org",
+
+    // Markdown configuration
+    markdown: {
+        syntaxHighlight: "shiki",
+        shikiConfig: {
+            theme: "github-light", // Minimal theme that matches the site aesthetic
+            wrap: true,
+        },
+    },
 });

@@ -1,0 +1,75 @@
+---
+import TrackingScript from '../components/TrackingScript.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  ogType?: string;
+}
+
+const {
+  title,
+  description = 'Yihong Song - Quantitative Technologist at Radix Trading',
+  ogType = 'website'
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+
+// Preload critical resources
+const preloadResources = [
+  { href: '/favicon.svg', as: 'image', type: 'image/svg+xml' },
+];
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Essential meta tags -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="generator" content={Astro.generator} />
+
+  <!-- Performance optimizations -->
+  <meta http-equiv="X-DNS-Prefetch-Control" content="on" />
+  <meta name="format-detection" content="telephone=no" />
+
+  <!-- SEO and social meta tags -->
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <meta name="author" content="Yihong Song" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href={canonicalURL} />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content={ogType} />
+  <meta property="og:url" content={canonicalURL} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:site_name" content="Yihong Song" />
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary" />
+  <meta property="twitter:url" content={canonicalURL} />
+  <meta property="twitter:title" content={title} />
+  <meta property="twitter:description" content={description} />
+
+  <!-- Favicon and icons -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="apple-touch-icon" href="/favicon.svg" />
+
+  <!-- Preload critical resources -->
+  {preloadResources.map(resource => (
+    <link rel="preload" href={resource.href} as={resource.as} type={resource.type} />
+  ))}
+
+  <!-- Global styles -->
+  <link rel="stylesheet" href="/src/styles/global.css" />
+</head>
+<body>
+  <slot />
+
+  <!-- Tracking script -->
+  <TrackingScript />
+</body>
+</html>
+
