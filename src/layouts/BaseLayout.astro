@@ -1,5 +1,6 @@
 ---
 import TrackingScript from '../components/TrackingScript.astro';
+import '../styles/global.css';
 
 interface Props {
   title: string;
@@ -61,9 +62,6 @@ const preloadResources = [
   {preloadResources.map(resource => (
     <link rel="preload" href={resource.href} as={resource.as} type={resource.type} />
   ))}
-
-  <!-- Global styles -->
-  <link rel="stylesheet" href="/src/styles/global.css" />
 </head>
 <body>
   <slot />
